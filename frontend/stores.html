@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Quản lý cửa hàng</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav>
+    <a href="dashboard.html">Trang chủ</a>
+    <a href="stores.html" class="active">Cửa hàng</a>
+    <a href="products.html">Sản phẩm</a>
+    <a href="employees.html">Nhân viên</a>
+  </nav>
+
+  <main>
+    <h2>Danh sách cửa hàng</h2>
+    <button onclick="loadStores()">Tải lại</button>
+    <table id="storeTable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Tên</th>
+          <th>Địa chỉ</th>
+          <th>Người quản lý</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/stores.js"></script>
+</body>
+</html>
