@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  finance.fxml – Màn hình Quản lý Tài chính
+  ✅ Mục đích:
+     - Hiển thị danh sách báo cáo thu chi của từng cửa hàng.
+     - Có bộ lọc theo cửa hàng, thời gian, loại giao dịch.
+     - Có các nút CRUD và xuất dữ liệu ra file.
+  ⚙️ Thiết kế:
+     - Bố cục BorderPane: top (bộ lọc), center (bảng dữ liệu), bottom (tổng hợp).
+     - Không cần fx:controller ngay để chạy được.
+-->
+
+<!-- Import các lớp JavaFX cần thiết -->
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!-- Root layout chính là BorderPane -->
+<BorderPane fx:controller="com.example.storemanagement.controller.FinanceController"
+    xmlns:fx="http://javafx.com/fxml" prefWidth="1000.0" prefHeight="640.0">
+
+    <!-- ===== TOP: Bộ lọc + Các nút hành động ===== -->
+    <top>
+        <!-- VBox xếp theo cột: dòng đầu là bộ lọc, dòng dưới là nút CRUD -->
+        <!-- style: padding, nền sáng, viền dưới -->
+        <VBox style="-fx-padding: 12; -fx-background-color: #fafafa; -fx-border-color: #eaeaea; -fx-border-width: 0 0 1 0;" spacing="8">
+            <children>
+                <!-- HBox chứa hàng đầu: label tiêu đề + bộ lọc -->
+                <HBox spacing="8">
+                    <children>
+                        <!-- Tiêu đề Finance -->
+                        <Label text="Finance" style="-fx-font-weight: bold; -fx-font-size: 14; -fx-padding: 4 8 0 0;"/>
+
+                        <!-- Bộ lọc theo cửa hàng -->
+                        <ComboBox fx:id="storeFilter" promptText="Store" prefWidth="180"/>
+
+                        <!-- Bộ chọn khoảng thời gian -->
+                        <DatePicker fx:id="fromDate" promptText="From"/>
+                        <DatePicker fx:id="toDate" promptText="To"/>
+
+                        <!-- Bộ lọc loại giao dịch: All / Income / Expense -->
+                        <ComboBox fx:id="typeFilter" promptText="Type (All/Income/Expense)" prefWidth="220"/>
+
+                        <!-- Nút áp dụng bộ lọc -->
+                        <Button fx:id="applyFilterBtn" text="Apply"/>
+                        <!-- Khoảng trống đẩy Refresh sang phải -->
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <!-- Nút làm mới -->
+                        <Button fx:id="refreshFinanceBtn" text="Refresh"/>
+                    </children>
+                </HBox>
+
+                <!-- HBox dòng thứ hai: các nút thao tác CRUD và Export -->
+                <HBox spacing="8">
+                    <children>
+                        <!-- Nút thêm báo cáo -->
+                        <Button fx:id="addReportBtn" text="Add"/>
+                        <!-- Nút sửa báo cáo được chọn -->
+                        <Button fx:id="editReportBtn" text="Edit"/>
+                        <!-- Nút xóa báo cáo được chọn -->
+                        <Button fx:id="deleteReportBtn" text="Delete"/>
+                        <!-- Nút xuất dữ liệu -->
+                        <!-- ⚠️ Tooltip cần tag con nếu muốn hiển thị gợi ý -->
+                        <Button fx:id="exportReportBtn" text="Export">
+                            <tooltip>
+                                <Tooltip text="Xuất báo cáo (CSV/PDF)"/>
+                            </tooltip>
+                        </Button>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </top>
+
+    <!-- ===== CENTER: Bảng danh sách thu/chi ===== -->
+    <center>
+        <!-- VBox bao quanh TableView để có thể giãn đều -->
+        <VBox>
+            <children>
+                <!-- Bảng TableView chứa dữ liệu FinanceReport -->
+                <TableView fx:id="financeTable" VBox.vgrow="ALWAYS">
+                    <!-- Gợi ý property:
+                         - id: Long
+                         - storeName: String
+                         - date: LocalDate
+                         - type: String
+                         - amount: Double
+                         - note: String -->
+                    <columns>
+                        <!-- Cấu hình từng cột và độ rộng -->
+                        <TableColumn fx:id="colId"        text="ID"        prefWidth="70"/>
+                        <TableColumn fx:id="colStore"     text="Store"     prefWidth="160"/>
+                        <TableColumn fx:id="colDate"      text="Date"      prefWidth="120"/>
+                        <TableColumn fx:id="colType"      text="Type"      prefWidth="120"/>
+                        <TableColumn fx:id="colAmount"    text="Amount"    prefWidth="120"/>
+                        <TableColumn fx:id="colNote"      text="Note"      prefWidth="260"/>
+                    </columns>
+
+                    <!-- Khi bảng rỗng, hiển thị thông báo -->
+                    <placeholder>
+                        <Label text="No finance records. Click 'Add' to create one."/>
+                    </placeholder>
+                </TableView>
+            </children>
+        </VBox>
+    </center>
+
+    <!-- ===== BOTTOM: Tổng hợp + Phân trang ===== -->
+    <bottom>
+        <!-- VBox chứa 2 hàng: tổng hợp và pagination -->
+        <!-- style: padding, nền xám nhạt, viền trên -->
+        <VBox style="-fx-padding: 8; -fx-background-color: #f6f6f6; -fx-border-color: #e2e2e2; -fx-border-width: 1 0 0 0;" spacing="6">
+            <children>
+                <!-- Hàng đầu: hiển thị tổng thu, chi, cân bằng -->
+                <HBox spacing="16">
+                    <children>
+                        <Label text="Totals:" style="-fx-font-weight: bold;"/>
+                        <Label fx:id="totalIncomeLbl"  text="Income: 0"/>
+                        <Label fx:id="totalExpenseLbl" text="Expense: 0"/>
+                        <Label fx:id="balanceLbl"      text="Balance: 0"/>
+                        <!-- Region đẩy phần tử về bên trái -->
+                        <Region HBox.hgrow="ALWAYS"/>
+                    </children>
+                </HBox>
+
+                <!-- Hàng dưới: phân trang -->
+                <HBox>
+                    <children>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <!-- Pagination hiển thị các trang dữ liệu -->
+                        <Pagination fx:id="financePagination" maxPageIndicatorCount="10"/>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </bottom>
+</BorderPane>
