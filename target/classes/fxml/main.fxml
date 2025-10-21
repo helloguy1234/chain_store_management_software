@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  main.fxml – Khung giao diện chính (JavaFX)
+  - Sử dụng BorderPane: top (Menu), left (Thanh điều hướng), center (vùng nội dung), bottom (status
+bar)
+  - Controller: com.example.storemanagement.controller.MainController
+  - Vùng center (fx:id=contentArea) sẽ được Controller nạp các màn hình con: customers.fxml,
+inventory.fxml, finance.fxml
+
+  Lưu ý đường dẫn tài nguyên:
+  - Các FXML con đặt trong: src/main/resources/fxml/
+  - CSS (nếu có) trong:    src/main/resources/css/style.css (được gắn ở Main.java)
+
+  (ĐÃ CHÚ THÍCH CHI TIẾT TỪNG DÒNG BÊN DƯỚI; CODE GIỮ NGUYÊN, CHỈ THÊM COMMENT)
+-->
+
+<!-- Khai báo import để FXML có thể dùng các lớp JavaFX tương ứng -->
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!-- BorderPane là layout 5 vùng: top/left/center/right/bottom -->
+<!-- fx:controller trỏ tới lớp điều khiển xử lý sự kiện và nạp màn hình con -->
+<!-- xmlns:fx khai báo namespace của JavaFX cho các thuộc tính fx:* -->
+<!-- prefWidth/prefHeight đặt kích cỡ ưa thích của cửa sổ khi mở -->
+<BorderPane fx:controller="com.example.storemanagement.controller.MainController"
+    xmlns:fx="http://javafx.com/fxml" prefWidth="1000.0" prefHeight="640.0">
+
+    <!-- Thanh menu trên cùng (vùng top của BorderPane) -->
+    <top>
+        <!-- MenuBar chứa các Menu; BorderPane.alignment căn giữa trong vùng top -->
+        <MenuBar BorderPane.alignment="CENTER">
+            <!-- Danh sách các Menu con của MenuBar -->
+            <menus>
+                <!-- Menu "File" -->
+                <Menu text="File">
+                    <!-- <graphic>
+                        <ImageView fitHeight="16" fitWidth="16" preserveRatio="true">
+                            <image>
+                                <Image url="@../images/logostb.jpeg" />
+                            </image>
+                        </ImageView>
+                    </graphic> -->
+                    <!-- MenuItem bên trong Menu "File" -->
+                    <items>
+                        <!-- MenuItem Exit: gọi phương thức exitApp() trong MainController khi click -->
+                        <MenuItem text="Exit" onAction="#exitApp" />
+                    </items>
+                </Menu>
+                <!-- Menu "View" để chuyển màn hình -->
+                <Menu text="View">
+                    <items>
+                        <!-- Mỗi MenuItem gọi hàm tương ứng trong MainController để nạp FXML con -->
+                        <MenuItem text="Customers" onAction="#openCustomers" />
+                        <MenuItem text="Inventory" onAction="#openInventory" />
+                        <MenuItem text="Finance" onAction="#openFinance" />
+                        <MenuItem fx:id="toggleMusicItem" text="🔊 Tắt nhạc nền" onAction="#onToggleMusic"/>
+                    </items>
+                </Menu>
+                <!-- Menu "Help" chứa About -->
+                <Menu text="Help">
+                    <items>
+                        <!-- Gọi openAbout() trong MainController để hiển thị hộp thoại "About" -->
+                        <MenuItem text="About" onAction="#openAbout" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+
+    <!-- Thanh điều hướng bên trái (vùng left) gồm các nút chuyển nhanh -->
+    <left>
+        <!-- VBox xếp các phần tử theo cột; spacing=8 khoảng cách giữa các con -->
+        <!-- BorderPane.alignment căn VBox trong vùng left của BorderPane -->
+        <VBox spacing="8.0" BorderPane.alignment="CENTER_LEFT">
+            <children>
+                <!-- Nhãn tiêu đề của khung điều hướng; padding để tạo khoảng cách trái -->
+                <Label text="Navigation" style="-fx-font-weight: bold; -fx-padding: 8 0 0 8;" />
+                <!-- Nút mở màn hình Customers; maxWidth=Infinity để nút giãn hết bề ngang -->
+                <Button text="Customers" onAction="#openCustomers" maxWidth="Infinity" />
+                <!-- Nút mở màn hình Inventory -->
+                <Button text="Inventory" onAction="#openInventory" maxWidth="Infinity" />
+                <!-- Nút mở màn hình Finance -->
+                <Button text="Finance" onAction="#openFinance" maxWidth="Infinity" />
+            </children>
+            <!-- Insets(top,right,bottom,left) = 12 cho cả bốn phía của VBox -->
+            <padding>
+                <Insets topRightBottomLeft="12" />
+            </padding>
+        </VBox>
+    </left>
+
+    <!-- Vùng trung tâm hiển thị nội dung động (màn hình con sẽ được nạp vào đây) -->
+    <center>
+        <!-- StackPane dùng làm placeholder; fx:id cho phép Controller truy cập vùng này bằng @FXML -->
+        <StackPane fx:id="contentArea" BorderPane.alignment="CENTER">
+            <!-- Có thể đặt placeholder mặc định để báo đang tải -->
+            <children>
+                <Label text="Loading..." />
+            </children>
+        </StackPane>
+    </center>
+
+    <!-- Thanh trạng thái dưới cùng (status bar) -->
+    <bottom>
+        <!-- HBox sắp xếp ngang; style thêm padding, nền xám nhạt, và viền trên -->
+        <HBox spacing="12.0" BorderPane.alignment="CENTER"
+            style="-fx-padding: 8; -fx-background-color: #f6f6f6; -fx-border-color: #e2e2e2; -fx-border-width: 1 0 0 0;">
+            <children>
+                <!-- Nhãn trạng thái; fx:id= statusLabel để Controller cập nhật (VD: URL DB, trạng
+                thái) -->
+                <Label fx:id="statusLabel" text="Status: ready" />
+                <!-- Region với HBox.hgrow="ALWAYS" để đẩy các phần tử sau sang phải (tạo khoảng
+                trống linh hoạt) -->
+                <Region HBox.hgrow="ALWAYS" />
+                <!-- Nhãn tên ứng dụng hiển thị ở góc phải thanh trạng thái -->
+                <Label text="Store Management System" />
+            </children>
+        </HBox>
+    </bottom>
+</BorderPane>

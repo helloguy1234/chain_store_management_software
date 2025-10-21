@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  inventory.fxml – Màn hình Quản lý Kho hàng / Tài nguyên
+  ✅ Mục đích:
+     - Hiển thị danh sách sản phẩm, số lượng tồn kho, đơn giá, nhà cung cấp, cửa hàng.
+     - Cho phép lọc, tìm kiếm, và thực hiện các hành động nhập/xuất hàng hoặc CRUD.
+  ⚙️ Thiết kế:
+     - Dùng BorderPane: top (bộ lọc + hành động), center (bảng dữ liệu), bottom (trạng thái & phân trang).
+     - Không cần controller riêng để vẫn có thể chạy độc lập.
+-->
+
+<!-- Import các lớp bố cục và control trong JavaFX -->
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!-- Root layout BorderPane để chia màn hình theo vùng -->
+<BorderPane fx:controller="com.example.storemanagement.controller.InventoryController"
+    xmlns:fx="http://javafx.com/fxml" prefWidth="1000.0" prefHeight="640.0">
+
+    <!-- ===== TOP: Bộ lọc + Tìm kiếm + Hành động ===== -->
+    <top>
+        <!-- HBox xếp các thành phần theo hàng ngang -->
+        <!-- style: thêm padding, màu nền sáng, đường viền dưới -->
+        <HBox spacing="8" style="-fx-padding: 12; -fx-background-color: #fafafa; -fx-border-color: #eaeaea; -fx-border-width: 0 0 1 0;">
+            <children>
+                <!-- Tiêu đề khu vực Inventory -->
+                <Label text="Inventory" style="-fx-font-weight: bold; -fx-padding: 4 8 0 0; -fx-font-size: 14;"/>
+
+                <!-- Bộ lọc chọn cửa hàng -->
+                <ComboBox fx:id="storeFilter" promptText="Store" prefWidth="160"/>
+                <!-- Bộ lọc chọn nhà cung cấp -->
+                <ComboBox fx:id="supplierFilter" promptText="Supplier" prefWidth="160"/>
+
+                <!-- Ô tìm kiếm sản phẩm theo tên hoặc mã SKU -->
+                <TextField fx:id="productSearchField" promptText="Search name / SKU" HBox.hgrow="ALWAYS"/>
+                <!-- Nút thực hiện tìm kiếm -->
+                <Button fx:id="searchProductBtn" text="Search"/>
+                <!-- Region để đẩy các nút CRUD sang phải -->
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- Nhóm nút thao tác CRUD và quản lý kho -->
+                <Button fx:id="addProductBtn" text="Add"/>          <!-- thêm sản phẩm -->
+                <Button fx:id="editProductBtn" text="Edit"/>        <!-- sửa sản phẩm -->
+                <Button fx:id="deleteProductBtn" text="Delete"/>    <!-- xóa sản phẩm -->
+
+                <!-- Nút nhập kho: tăng số lượng tồn -->
+                <Button fx:id="importStockBtn" text="Import Stock">
+                    <tooltip>
+                        <Tooltip text="Nhập kho (tăng số lượng)"/>
+                    </tooltip>
+                </Button>
+
+                <!-- Nút xuất kho: giảm số lượng tồn -->
+                <Button fx:id="exportStockBtn" text="Export Stock">
+                    <tooltip>
+                        <Tooltip text="Xuất kho (giảm số lượng)"/>
+                    </tooltip>
+                </Button>
+
+                <!-- Nút làm mới bảng dữ liệu -->
+                <Button fx:id="refreshInventoryBtn" text="Refresh"/>
+            </children>
+        </HBox>
+    </top>
+
+    <!-- ===== CENTER: Bảng dữ liệu kho hàng ===== -->
+    <center>
+        <!-- VBox chứa TableView để có thể co giãn theo chiều dọc -->
+        <VBox>
+            <children>
+                <!-- Bảng TableView hiển thị danh sách sản phẩm trong kho -->
+                <TableView fx:id="inventoryTable" VBox.vgrow="ALWAYS">
+                    <!-- Gợi ý các thuộc tính tương ứng trong class Product/Stock -->
+                    <!-- id, name, sku, storeName, supplierName, stock, unitPrice, updatedAt -->
+                    <columns>
+                        <!-- Cột ID sản phẩm -->
+                        <TableColumn fx:id="colId"           text="ID"            prefWidth="70"/>
+                        <!-- Tên sản phẩm -->
+                        <TableColumn fx:id="colName"         text="Name"          prefWidth="220"/>
+                        <!-- Mã SKU (mã sản phẩm) -->
+                        <TableColumn fx:id="colSku"          text="SKU"           prefWidth="120"/>
+                        <!-- Tên cửa hàng chứa sản phẩm -->
+                        <TableColumn fx:id="colStore"        text="Store"         prefWidth="140"/>
+                        <!-- Tên nhà cung cấp -->
+                        <TableColumn fx:id="colSupplier"     text="Supplier"      prefWidth="160"/>
+                        <!-- Số lượng tồn kho -->
+                        <TableColumn fx:id="colStock"        text="Stock"         prefWidth="90"/>
+                        <!-- Đơn giá sản phẩm -->
+                        <TableColumn fx:id="colUnitPrice"    text="Unit Price"    prefWidth="110"/>
+                        <!-- Ngày cập nhật gần nhất -->
+                        <TableColumn fx:id="colUpdatedAt"    text="Updated At"    prefWidth="150"/>
+                    </columns>
+
+                    <!-- Khi chưa có dữ liệu, hiển thị nhãn thông báo -->
+                    <placeholder>
+                        <Label text="No inventory data. Try 'Refresh' or 'Add'."/>
+                    </placeholder>
+                </TableView>
+            </children>
+        </VBox>
+    </center>
+
+    <!-- ===== BOTTOM: Thanh trạng thái + Phân trang ===== -->
+    <bottom>
+        <!-- HBox hiển thị thông tin số lượng + pagination -->
+        <!-- style: padding nhẹ, nền xám nhạt, có viền trên -->
+        <HBox spacing="12" style="-fx-padding: 8; -fx-background-color: #f6f6f6; -fx-border-color: #e2e2e2; -fx-border-width: 1 0 0 0;">
+            <children>
+                <!-- Nhãn hiển thị tổng số hàng và số dòng đang chọn -->
+                <Label fx:id="inventoryStatusLabel" text="0 item(s) • 0 selected"/>
+                <!-- Region để đẩy pagination sang phải -->
+                <Region HBox.hgrow="ALWAYS"/>
+                <!-- Điều khiển phân trang -->
+                <Pagination fx:id="inventoryPagination" maxPageIndicatorCount="10"/>
+            </children>
+        </HBox>
+    </bottom>
+</BorderPane>
