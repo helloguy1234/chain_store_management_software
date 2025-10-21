@@ -1,0 +1,111 @@
+/* ==========================================================================
+   JavaFX Global Stylesheet for Store Management System
+   - Giao diện gọn gàng, dễ nhìn, phù hợp 3 màn hình: Customers/Inventory/Finance
+   - Có thể gắn trong Main.java: scene.getStylesheets().add("/css/style.css");
+   Tips: Các class dưới đây áp vào FXML bằng styleClass (optional)
+   ========================================================================== */
+
+/* ----- Base ----- */
+.root {
+  -fx-font-family: "Segoe UI", "Roboto", "Arial";
+  -fx-font-size: 13px;
+  -fx-base: #ffffff;                    /* Nền chung */
+  -fx-accent: #2962ff;                  /* Màu nhấn (button, selection) */
+  -fx-focus-color: derive(-fx-accent, 20%);
+  -fx-faint-focus-color: rgba(41,98,255,0.2);
+}
+
+/* ----- MenuBar ----- */
+.menu-bar {
+  -fx-background-color: linear-gradient(to bottom, #fafafa, #f2f2f2);
+  -fx-border-color: #e2e2e2;
+  -fx-border-width: 0 0 1 0;
+}
+.menu-item:focused {
+  -fx-background-color: rgba(41,98,255,0.12);
+}
+
+/* ----- Buttons ----- */
+.button {
+  -fx-background-color: #ffffff, linear-gradient(to bottom, #ffffff, #f6f6f6);
+  -fx-background-insets: 0,1;
+  -fx-background-radius: 10;
+  -fx-padding: 6 12 6 12;
+  -fx-border-color: #d9d9d9;
+  -fx-border-radius: 10;
+}
+.button:hover {
+  -fx-background-color: #ffffff, linear-gradient(to bottom, #ffffff, #ededed);
+}
+.button:pressed {
+  -fx-background-color: #f0f0f0;
+}
+.button:default {
+  -fx-background-color: -fx-accent;
+  -fx-text-fill: white;
+}
+
+/* Utility classes (áp bằng node.getStyleClass().add("btn-danger")) */
+.btn-danger { -fx-background-color: #e53935; -fx-text-fill: #fff; }
+.btn-success { -fx-background-color: #2e7d32; -fx-text-fill: #fff; }
+
+/* ----- TextField / ComboBox ----- */
+.text-field, .combo-box-base {
+  -fx-background-radius: 8;
+  -fx-border-radius: 8;
+  -fx-border-color: #dcdcdc;
+  -fx-padding: 6 10 6 10;
+}
+.text-field:focused, .combo-box-base:focused {
+  -fx-border-color: -fx-accent;
+  -fx-background-color: #ffffff;
+}
+
+/* ----- TableView ----- */
+.table-view {
+  -fx-background-color: #ffffff;
+  -fx-border-color: #e2e2e2;
+  -fx-border-width: 1;
+}
+.table-view:focused {
+  -fx-background-insets: 0, 1;
+}
+.table-view .column-header-background {
+  -fx-background-color: linear-gradient(to bottom, #fafafa, #f0f0f0);
+  -fx-border-color: #e2e2e2;
+}
+.table-view .column-header, .table-view .filler {
+  -fx-size: 36px;
+}
+.table-row-cell:odd {
+  -fx-background-color: #fafafa;
+}
+.table-row-cell:selected {
+  -fx-background-color: -fx-accent;
+}
+.table-row-cell:selected .text {
+  -fx-fill: white;
+}
+.table-view .placeholder .label {
+  -fx-text-fill: #888;
+}
+
+/* ----- Pagination ----- */
+.pagination > .pagination-control .control-box .number-button:selected {
+  -fx-background-color: -fx-accent;
+  -fx-text-fill: white;
+}
+
+/* ----- Status/Toolbar area (nếu không inline style) ----- */
+.status-bar {
+  -fx-padding: 8;
+  -fx-background-color: #f6f6f6;
+  -fx-border-color: #e2e2e2;
+  -fx-border-width: 1 0 0 0;
+}
+
+/* ----- Labels / Headings ----- */
+.label.title {
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+}

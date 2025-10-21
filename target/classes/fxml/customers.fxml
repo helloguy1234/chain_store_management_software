@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  customers.fxml – Màn hình Quản lý Khách hàng
+  ✅ Mục đích:
+     - Hiển thị danh sách khách hàng bằng TableView.
+     - Có thanh công cụ để tìm kiếm và thực hiện thao tác CRUD (Add/Edit/Delete).
+     - Có thanh trạng thái dưới cùng (status bar + phân trang).
+
+  ⚙️ Thiết kế:
+     - Dùng BorderPane: top (thanh công cụ), center (bảng dữ liệu), bottom (thanh trạng thái).
+     - Không gắn fx:controller để vẫn chạy được khi chưa có CustomersController.
+     - Dùng fx:id cho các control quan trọng → sau này controller sẽ truy cập được.
+-->
+
+<!-- Khai báo import cho các thành phần giao diện JavaFX -->
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!-- Root layout là BorderPane (chia màn hình thành top / center / bottom) -->
+<BorderPane fx:controller="com.example.storemanagement.controller.CustomerController"
+    xmlns:fx="http://javafx.com/fxml" prefWidth="1000.0" prefHeight="640.0">
+
+    <!-- ===== TOP: Thanh công cụ tìm kiếm + CRUD ===== -->
+    <top>
+        <!-- HBox xếp các thành phần theo hàng ngang -->
+        <!-- style: padding 12px, nền sáng (#fafafa), đường viền dưới mỏng (#eaeaea) -->
+        <HBox spacing="8"
+            style="-fx-padding: 12; -fx-background-color: #fafafa; -fx-border-color: #eaeaea; -fx-border-width: 0 0 1 0;">
+            <children>
+                <!-- Nhãn tiêu đề "Customers" -->
+                <Label text="Customers"
+                    style="-fx-font-weight: bold; -fx-padding: 4 8 0 0; -fx-font-size: 14;" />
+
+                <!-- Ô tìm kiếm khách hàng (theo tên / SĐT / email) -->
+                <!-- fx:id: customerSearchField giúp controller lấy dữ liệu nhập -->
+                <TextField fx:id="customerSearchField"
+                    promptText="Search name / phone / email"
+                    HBox.hgrow="ALWAYS" /> <!-- cho phép TextField giãn theo chiều ngang -->
+
+                <!-- Nút Search -->
+                <Button fx:id="searchCustomerBtn" text="Search" />
+
+                <!-- Region trống để đẩy nhóm nút CRUD sang phải -->
+                <Region HBox.hgrow="ALWAYS" />
+
+                <!-- Nhóm nút CRUD (Create / Read / Update / Delete) -->
+                <Button fx:id="addCustomerBtn" text="Add">
+                    <tooltip>
+                        <Tooltip text="Tạo khách hàng mới" />
+                    </tooltip>
+                </Button>
+
+                <Button fx:id="editCustomerBtn" text="Edit">
+                    <tooltip>
+                        <Tooltip text="Sửa khách hàng được chọn" />
+                    </tooltip>
+                </Button>
+
+                <Button fx:id="deleteCustomerBtn" text="Delete">
+                    <tooltip>
+                        <Tooltip text="Xóa khách hàng được chọn" />
+                    </tooltip>
+                </Button>
+
+                <Button fx:id="refreshCustomersBtn" text="Refresh" /> <!-- Làm mới bảng -->
+            </children>
+        </HBox>
+    </top>
+
+    <!-- ===== CENTER: Bảng dữ liệu khách hàng ===== -->
+    <center>
+        <!-- VBox chứa TableView, cho phép giãn đều khi cửa sổ thay đổi kích thước -->
+        <VBox>
+            <children>
+                <!-- TableView hiển thị danh sách khách hàng -->
+                <!-- fx:id = customersTable để controller truy xuất dữ liệu -->
+                <TableView fx:id="customersTable" VBox.vgrow="ALWAYS">
+                    <!-- Cấu hình các cột tương ứng với thuộc tính Customer -->
+                    <!-- Gợi ý property:
+                         - id            : Long / Integer
+                         - name          : String
+                         - phone         : String
+                         - email         : String
+                         - points        : Integer
+                         - createdAt     : LocalDate/LocalDateTime
+                    -->
+                    <columns>
+                        <!-- Mỗi TableColumn tương ứng 1 trường -->
+                        <TableColumn fx:id="colId" text="ID" prefWidth="70" />
+                        <TableColumn fx:id="colName" text="Name" prefWidth="200" />
+                        <TableColumn fx:id="colPhone" text="Phone" prefWidth="140" />
+                        <TableColumn fx:id="colEmail" text="Email" prefWidth="220" />
+                        <TableColumn fx:id="colPoints" text="Points" prefWidth="90" />
+                        <TableColumn fx:id="colCreatedAt" text="Created At" prefWidth="140" />
+                    </columns>
+
+                    <!-- Khi TableView rỗng, hiển thị nhãn placeholder này -->
+                    <placeholder>
+                        <Label text="No customers yet. Click 'Add' to create one." />
+                    </placeholder>
+                </TableView>
+            </children>
+        </VBox>
+    </center>
+
+    <!-- ===== BOTTOM: Thanh trạng thái + Phân trang ===== -->
+    <bottom>
+        <!-- HBox chứa nhãn trạng thái và thanh phân trang -->
+        <!-- style: nền xám nhạt, đường viền trên, padding 8px -->
+        <HBox spacing="12"
+            style="-fx-padding: 8; -fx-background-color: #f6f6f6; -fx-border-color: #e2e2e2; -fx-border-width: 1 0 0 0;">
+            <children>
+                <!-- Nhãn hiển thị số dòng được chọn -->
+                <Label fx:id="customerStatusLabel" text="0 selected" />
+
+                <!-- Region giãn để đẩy Pagination sang phải -->
+                <Region HBox.hgrow="ALWAYS" />
+
+                <!-- Thanh phân trang (Pagination) cho bảng -->
+                <!-- maxPageIndicatorCount=10: hiển thị tối đa 10 nút trang -->
+                <Pagination fx:id="customerPagination" maxPageIndicatorCount="10" />
+            </children>
+        </HBox>
+    </bottom>
+</BorderPane>

@@ -1,0 +1,6 @@
+ID,Store,Date,Type,Amount,Category,Note
+5,"HUST Mart – Cơ sở 1",2025-10-19,INCOME,200000.00,"Rent","Thuê bể bơi"
+4,"HUST Mart – Cơ sở 2",2025-10-19,INCOME,89000.00,"Sales","Doanh thu bán lẻ"
+3,"HUST Mart – Cơ sở 1",2025-10-19,EXPENSE,30000.00,"Equipment","Sửa chữa kệ"
+2,"HUST Mart – Cơ sở 1",2025-10-19,EXPENSE,15000.00,"Utilities","Tiền điện nước"
+1,"HUST Mart – Cơ sở 1",2025-10-19,INCOME,120000.00,"Sales","Doanh thu bán lẻ"
